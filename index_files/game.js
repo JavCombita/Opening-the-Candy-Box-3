@@ -31344,3 +31344,213 @@ Saving.saveNumber("gameLollipopsCurrent",10000);
 Saving.saveNumber("gameLollipopsMax",10000);XP.add(10000);
 };
 function check(){};
+
+// 1. INYECCIÓN DE RECURSOS (ASCII ART)
+// -----------------------------------------------------------------------------
+// Esperamos a que Database exista para inyectar
+var InjectResources = function() {
+    if (typeof Database === "undefined") return;
+
+    // Armas Nuevas
+    Database.setAscii("eqItems/weapons/jellySword", "{~~~}");
+    Database.setAscii("eqItems/weapons/licoriceAxe", "P---");
+    Database.setAscii("eqItems/weapons/mintSpear", "---<");
+    Database.setAscii("eqItems/weapons/candyKatana", "/---");
+    Database.setAscii("eqItems/weapons/voidScythe", "?--)");
+
+    // Armaduras / Sombreros / Anillos
+    Database.setAscii("eqItems/armors/chocoArmor", "[##]");
+    Database.setAscii("eqItems/armors/voidArmor", "[??]");
+    Database.setAscii("eqItems/hats/crown", "WMW");
+    
+    // Enemigos Nuevos
+    Database.setAscii("enemies/jellyBlob", " o_o ");
+    Database.setAscii("enemies/jellyKing", "(__K__)");
+    Database.setAscii("enemies/mintDragon", "<(O.O)>");
+    Database.setAscii("enemies/voidMonster", " ??? ");
+    Database.setAscii("enemies/worldEater", "(X__X)");
+    
+    console.log("Recursos de expansión inyectados.");
+};
+
+// Llamamos a la inyección inmediatamente
+setTimeout(InjectResources, 100);
+
+// 2. NUEVAS CLASES DE ITEMS
+// -----------------------------------------------------------------------------
+
+// --- ESPADA DE GELATINA ---
+var JellySword = (function(_super) {
+    __extends(JellySword, _super);
+    function JellySword() {
+        _super.call(this, "eqItemWeaponJelly", "Jelly Sword", "Una espada pegajosa que vibra.", "eqItems/weapons/jellySword");
+    }
+    JellySword.prototype.getQuestEntityWeapon = function(quest, player) {
+        var qew = new QuestEntityWeapon(quest, player, new Naming("A jelly sword", "a jelly sword"), player.getClassicCollisionBoxCollection(), 12);
+        qew.getCloseCombatDelay().setFixedDelay(3);
+        return qew;
+    };
+    return JellySword;
+})(EqItem);
+
+// --- KATANA DE CARAMELO ---
+var CandyKatana = (function(_super) {
+    __extends(CandyKatana, _super);
+    function CandyKatana() {
+        _super.call(this, "eqItemWeaponKatana", "Candy Katana", "Afilada mil veces con azúcar cristalizado.", "eqItems/weapons/candyKatana");
+    }
+    CandyKatana.prototype.getQuestEntityWeapon = function(quest, player) {
+        var qew = new QuestEntityWeapon(quest, player, new Naming("A candy katana", "a candy katana"), player.getClassicCollisionBoxCollection(), 45);
+        qew.getCloseCombatDelay().setFixedDelay(1); // Muy rápida
+        return qew;
+    };
+    return CandyKatana;
+})(EqItem);
+
+// --- GUADAÑA DEL VACÍO (POST-GAME) ---
+var VoidScythe = (function(_super) {
+    __extends(VoidScythe, _super);
+    function VoidScythe() {
+        _super.call(this, "eqItemWeaponVoid", "Void Scythe", "Roba la esencia vital de los enemigos.", "eqItems/weapons/voidScythe");
+    }
+    VoidScythe.prototype.getQuestEntityWeapon = function(quest, player) {
+        var qew = new QuestEntityWeapon(quest, player, new Naming("The Void Scythe", "the void scythe"), player.getClassicCollisionBoxCollection(), 150);
+        qew.getCloseCombatDelay().setFixedDelay(6); // Lenta pero mortal
+        return qew;
+    };
+    return VoidScythe;
+})(EqItem);
+
+// 3. NUEVOS ENEMIGOS
+// -----------------------------------------------------------------------------
+
+var JellyKing = (function(_super) {
+    __extends(JellyKing, _super);
+    function JellyKing(quest, pos) {
+        _super.call(this, quest, pos, new Naming("Jelly King", "the Jelly King"), new RenderArea(7, 3), new Pos(0, 0), new CollisionBoxCollection(new CollisionBox(this, new Pos(0, 0), new Pos(7, 3))), new QuestEntityMovement());
+        this.setMaxHp(800);
+        this.setHp(800);
+        this.setDestructible(true);
+        this.getRenderArea().drawString(Database.getAscii("enemies/jellyKing"), 0, 1);
+        // Arma del jefe
+        this.addQuestEntityWeapon(new QuestEntityWeapon(this.getQuest(), this, new Naming("Royal Gelatin", "royal gelatin"), new CollisionBoxCollection(new CollisionBox(this, new Pos(-2, 0), new Pos(9, 3))), 15));
+    }
+    return JellyKing;
+})(QuestEntity);
+
+// 4. NUEVOS MAPAS (ZONAS)
+// -----------------------------------------------------------------------------
+
+// --- MAPA 1: BOSQUE DE GELATINA ---
+var ForestMap = (function(_super) {
+    __extends(ForestMap, _super);
+    function ForestMap(game) {
+        _super.call(this, game);
+    }
+    
+    ForestMap.prototype.getNaming = function() { return new Naming("Jelly Forest", "the Jelly Forest"); };
+    
+    ForestMap.prototype.update = function() {
+        this.getGame().setBackgroundColor(new Color(20, 40, 20)); // Fondo verdoso
+        
+        var text = "Estás en el Bosque de Gelatina. El suelo tiembla.\n\n";
+        this.getRenderArea().drawString(text, 5, 2);
+        
+        // Botones de Misiones
+        this.getRenderArea().addAsciiRealButton("Volver al Mundo", 5, 20, "backToWorld", "Regresar al mapa principal.");
+        this.getRenderArea().addLinkCall(".backToWorld", new CallbackCollection(this.goBack.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("Entrada al Bosque (Fácil)", 5, 6, "forest1", "Luchar contra babosas.");
+        this.getRenderArea().addLinkCall(".forest1", new CallbackCollection(this.startQuest1.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("Nido del Rey (JEFE)", 5, 10, "forestBoss", "Desafiar al Rey Gelatina.");
+        this.getRenderArea().addLinkCall(".forestBoss", new CallbackCollection(this.startBoss.bind(this)));
+    };
+    
+    ForestMap.prototype.goBack = function() { this.getGame().setPlace(new MainMap(this.getGame())); };
+    ForestMap.prototype.startQuest1 = function() { /* Aquí iría la lógica para iniciar una Quest específica */ alert("¡Entrando al bosque!"); };
+    ForestMap.prototype.startBoss = function() { /* Lógica Boss */ alert("¡El Rey Gelatina ruge!"); };
+    
+    return ForestMap;
+})(Place);
+
+
+// 5. MODIFICACIÓN DEL MAPA PRINCIPAL (MAIN MAP HOOK)
+// -----------------------------------------------------------------------------
+// Guardamos la función original para no perderla
+var _originalMainMapUpdate = MainMap.prototype.update;
+
+MainMap.prototype.update = function() {
+    // Ejecutamos la lógica original primero
+    _originalMainMapUpdate.call(this);
+
+    // INYECTAMOS NUESTRO BOTÓN DE VIAJE
+    // Solo aparece si el jugador ha avanzado un poco (ej: tiene el mapa)
+    if (Saving.loadBool("gridItemPossessedMap")) {
+        this.getRenderArea().addAsciiRealButton("VIAJAR A NUEVAS TIERRAS", 60, 15, "btnExpansionTravel", "Explora el Bosque, la Montaña y el Vacío.");
+        this.getRenderArea().addLinkCall(".btnExpansionTravel", new CallbackCollection(this.openExpansionMenu.bind(this)));
+    }
+};
+
+MainMap.prototype.openExpansionMenu = function() {
+    // Menú simple usando alertas por ahora, o cambiar directamente al mapa
+    // En una implementación completa, esto abriría un sub-menú.
+    // Aquí, simularemos ir al primer mapa nuevo.
+    this.getGame().setPlace(new ForestMap(this.getGame()));
+};
+
+
+// 6. COMPATIBILIDAD MÓVIL (CONTROLES)
+// -----------------------------------------------------------------------------
+var MobileSupport = {
+    check: function() {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            this.injectControls();
+        }
+    },
+    injectControls: function() {
+        if ($("#mobile-controls").length > 0) return;
+        
+        var css = `
+            #mobile-controls { position: fixed; bottom: 10px; left: 0; width: 100%; height: 60px; z-index: 1000; display: flex; justify-content: center; gap: 10px; }
+            .mob-btn { background: rgba(255,255,255,0.8); border: 2px solid #000; padding: 15px; font-weight: bold; border-radius: 10px; font-size: 20px; }
+        `;
+        $("head").append("<style>" + css + "</style>");
+        
+        var html = `
+            <div id="mobile-controls">
+                <button class="mob-btn" id="m-left">⬅️</button>
+                <button class="mob-btn" id="m-atk">⚔️ ATACAR</button>
+                <button class="mob-btn" id="m-right">➡️</button>
+            </div>
+        `;
+        $("body").append(html);
+
+        // Vincular eventos simulando teclas
+        $("#m-left").on("touchstart mousedown", function() { simulationKeyLeft = true; });
+        $("#m-left").on("touchend mouseup", function() { simulationKeyLeft = false; });
+        
+        $("#m-right").on("touchstart mousedown", function() { simulationKeyRight = true; });
+        $("#m-right").on("touchend mouseup", function() { simulationKeyRight = false; });
+
+        // Función global para simular teclas que el juego original escucha
+        window.simulationKeyLeft = false;
+        window.simulationKeyRight = false;
+        
+        // Sobrescribir el listener de teclado del juego original para aceptar nuestra simulación
+        // (Esto requiere buscar dónde 'Keyboard' o similar se usa en el código original y parchearlo,
+        //  o simplemente disparar eventos de teclado reales)
+        var triggerKey = function(code, type) {
+            var e = jQuery.Event(type);
+            e.which = code; e.keyCode = code;
+            $(document).trigger(e);
+        };
+        
+        $("#m-atk").on("touchstart mousedown", function() { triggerKey(32, "keydown"); }); // Espacio
+    }
+};
+
+// Iniciar chequeo móvil
+$(document).ready(function() {
+    MobileSupport.check();
+});
