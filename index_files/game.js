@@ -31344,3 +31344,524 @@ Saving.saveNumber("gameLollipopsCurrent",10000);
 Saving.saveNumber("gameLollipopsMax",10000);XP.add(10000);
 };
 function check(){};
+
+
+// 1. INICIALIZACIÓN DEL SISTEMA V3
+// =============================================================================
+
+var CB3_System = {
+    version: "3.0 Director's Cut",
+    author: "JavCombita",
+    initialized: false
+};
+
+var InitCandyBox3 = function() {
+    if(CB3_System.initialized) return;
+    CB3_System.initialized = true;
+
+    document.title = "Opening The Candy Box 3";
+    console.log("Inicializando " + CB3_System.version + "...");
+
+    // Inyectar créditos en la interfaz
+    if(jQuery("#credits").length === 0) {
+        jQuery("body").append("<div id='credits' style='text-align:center; font-family:monospace; font-size:11px; margin-top:20px; color:#555;'>Opening The Candy Box 3<br>Expansión Creada por <b>JavCombita</b></div>");
+    }
+
+    // Detección y activación de soporte móvil
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        InjectMobileInterface();
+    }
+};
+
+// Esperamos a que el motor base cargue
+setTimeout(InitCandyBox3, 1000);
+
+
+// 2. BASE DE DATOS DE ARTE ASCII (HD & IMPONENTE)
+// =============================================================================
+
+var InjectHDResources = function() {
+    if (typeof Database === "undefined") return;
+
+    // --- ARMAS (DISEÑOS MEJORADOS) ---
+    
+    Database.setAscii("items/weapons/jellySword", "{~~~}");
+    Database.setAscii("items/weapons/mintSpear", "---<");
+    Database.setAscii("items/weapons/candyKatana", "/--/");
+    Database.setAscii("items/weapons/chocoHammer", "O=|");
+    Database.setAscii("items/weapons/voidScythe", "?-)");
+
+    // --- ITEMS DE EQUIPAMIENTO ---
+    Database.setAscii("items/hats/sugarCrown", "WMW");
+    Database.setAscii("items/hats/voidMask", "[oo]");
+    Database.setAscii("items/armors/heavyChoco", "[##]");
+    Database.setAscii("items/armors/voidPlate", "[??]");
+    
+    // Anillos
+    Database.setAscii("items/rings/ringPower", "(*)p");
+    Database.setAscii("items/rings/ringGreed", "($)g");
+    Database.setAscii("items/rings/ringHaste", "(>)h");
+
+    // --- ARTE DE ENEMIGOS (GRANDES Y DETALLADOS) ---
+
+    // Gummy Bear (Oso de Goma) - Tamaño Mediano
+    Database.setAscii("enemies/gummyBear", 
+        "  (o o) \n" +
+        " /  ^  \\\n" +
+        "|  (_)  |"
+    );
+
+    // Licorice Snake (Serpiente de Regaliz) - Alargada
+    Database.setAscii("enemies/licoriceSnake", 
+        "   _    _\n" +
+        "~O~ ~~~ ~O>"
+    );
+
+    // Choco Golem (Golem de Chocolate) - Tanque
+    Database.setAscii("enemies/chocoGolem", 
+        "  [##]  \n" +
+        " /####\\ \n" +
+        "|##||##|\n" +
+        "LL    LL"
+    );
+
+    // JEFE 1: REY GELATINA (JELLY KING)
+    Database.setAscii("enemies/jellyKing", 
+        "    .---.\n" +
+        "   /  W  \\\n" +
+        "  (  o o  )\n" +
+        "   \\  O  /\n" +
+        "    `---`"
+    );
+
+    // JEFE 2: DRAGÓN DE MENTA (MINT DRAGON)
+    Database.setAscii("enemies/mintDragon", 
+        "               />\n" +
+        "      __ ____/ /\n" +
+        "    /  '____  /\n" +
+        "  _<  (O . O) >\n" +
+        "    \\   ^   /"
+    );
+
+    // JEFE FINAL: EL DEVORADOR (VOID EATER)
+    Database.setAscii("enemies/voidEater", 
+        "      ...\n" +
+        "    ( @ @ )\n" +
+        "   (   |   )\n" +
+        "  (  [___]  )\n" +
+        "    ( ... )"
+    );
+
+    // --- MAPAS (PAISAJES INMERSIVOS) ---
+
+    Database.setAscii("maps/jellyKingdom", 
+        "      .      .       .       .       .      .     .      \n" +
+        "  .      (      .  (   REINO DE GELATINA   ) .      (    \n" +
+        "    (      )        )     .       .     (       )    )   \n" +
+        "   (  )   (    )   (   _______         )   (   (    (    \n" +
+        "  (    )   )  (     ) /       \\  (    (     )   )    )   \n" +
+        "   |~~|   (    )   |  |CASTILLO|  |    )   (   |~~|      \n" +
+        "  _|~~|____|~~|____|  | GELATINA|  |____|~~|___|~~|____  \n" +
+        " / ~   ~  ~    ~    \\ |___Rey___| /  ~    ~   ~    ~   \\ \n" +
+        "|  ~     ~    ~   ~  \\___________/  ~   ~    ~    ~   ~ |\n" +
+        " \\_______________________________________________________/"
+    );
+
+    Database.setAscii("maps/mintMountains", 
+        "             /\\                                          \n" +
+        "            /  \\      /\\           MONTAÑAS DE MENTA     \n" +
+        "           / ** \\    /  \\     /\\                        \n" +
+        "          /      \\  / ** \\   /  \\      /\\               \n" +
+        "         /        \\/      \\ / ** \\    /  \\    _--_      \n" +
+        "   /\\   /    /\\    \\       /      \\  / ** \\  (    )     \n" +
+        "  /  \\ /    /  \\    \\     /        \\/      \\  `--'      \n" +
+        " /    /    /    \\    \\   /          \\       \\            \n" +
+        "/____/____/______\\____\\_/____________\\_______\\__________ \n" +
+        " .   .   .  .   .   .   .   .   .   .   .   .   .   .  . \n" +
+        "_________________________________________________________"
+    );
+
+    Database.setAscii("maps/theVoid", 
+        " .       .         .           .                  .       \n" +
+        "     .        !          .         .       !        .     \n" +
+        " .      - - -   E L   V A C Í O   - - -        .          \n" +
+        "    .  /  X  \\      .      .          /  X  \\       .     \n" +
+        "      | [___] | .      .       .     | [___] |            \n" +
+        "   .   \\  V  /    .        .      .   \\  V  /   .         \n" +
+        "        `---'          .               `---'              \n" +
+        " 01010101010101010101010101010101010101010101010101010101 \n" +
+        " REALITY_NOT_FOUND.exe ... CARGANDO PESADILLAS ... ERROR  "
+    );
+
+    console.log("Recursos HD V3 Inyectados.");
+};
+
+setTimeout(InjectHDResources, 500);
+
+
+// 3. NUEVAS CLASES DE EQUIPAMIENTO (STATS)
+// =============================================================================
+
+// -- ARMAS --
+var JellySword = (function(_super) { __extends(JellySword, _super); 
+    function JellySword() { _super.call(this, "w_jelly", "Espada Gelatina", "Vibra al golpear.", "items/weapons/jellySword"); }
+    JellySword.prototype.getQuestEntityWeapon = function(q, p) { 
+        var w = new QuestEntityWeapon(q, p, new Naming("Jelly Sword", "Jelly Sword"), p.getClassicCollisionBoxCollection(), 15);
+        w.getCloseCombatDelay().setFixedDelay(3); return w; 
+    }; return JellySword; 
+})(EqItem);
+
+var MintSpear = (function(_super) { __extends(MintSpear, _super); 
+    function MintSpear() { _super.call(this, "w_mint", "Lanza de Menta", "Perfora con frescura.", "items/weapons/mintSpear"); }
+    MintSpear.prototype.getQuestEntityWeapon = function(q, p) { 
+        var w = new QuestEntityWeapon(q, p, new Naming("Mint Spear", "Mint Spear"), p.getClassicCollisionBoxCollection(), 25);
+        w.getCloseCombatDelay().setFixedDelay(4); return w; 
+    }; return MintSpear; 
+})(EqItem);
+
+var CandyKatana = (function(_super) { __extends(CandyKatana, _super); 
+    function CandyKatana() { _super.call(this, "w_katana", "Katana Dulce", "Acero de azúcar plegado.", "items/weapons/candyKatana"); }
+    CandyKatana.prototype.getQuestEntityWeapon = function(q, p) { 
+        var w = new QuestEntityWeapon(q, p, new Naming("Candy Katana", "Candy Katana"), p.getClassicCollisionBoxCollection(), 45);
+        w.getCloseCombatDelay().setFixedDelay(1); return w; 
+    }; return CandyKatana; 
+})(EqItem);
+
+var ChocoHammer = (function(_super) { __extends(ChocoHammer, _super); 
+    function ChocoHammer() { _super.call(this, "w_hammer", "Martillo Choco", "Aplasta todo.", "items/weapons/chocoHammer"); }
+    ChocoHammer.prototype.getQuestEntityWeapon = function(q, p) { 
+        var w = new QuestEntityWeapon(q, p, new Naming("Choco Hammer", "Choco Hammer"), p.getClassicCollisionBoxCollection(), 80);
+        w.getCloseCombatDelay().setFixedDelay(10); return w; 
+    }; return ChocoHammer; 
+})(EqItem);
+
+var VoidScythe = (function(_super) { __extends(VoidScythe, _super); 
+    function VoidScythe() { _super.call(this, "w_void", "Guadaña Vacío", "Roba vida.", "items/weapons/voidScythe"); }
+    VoidScythe.prototype.getQuestEntityWeapon = function(q, p) { 
+        var w = new QuestEntityWeapon(q, p, new Naming("Void Scythe", "Void Scythe"), p.getClassicCollisionBoxCollection(), 200);
+        w.getCloseCombatDelay().setFixedDelay(6); return w; 
+    }; return VoidScythe; 
+})(EqItem);
+
+// -- ANILLOS Y ARMADURAS (Simulados como Items Especiales) --
+// Nota: En CandyBox2 original, los items pasivos se manejan diferente. 
+// Aquí los registramos para que aparezcan en inventario.
+var RingOfPower = (function(_super){ __extends(RingOfPower, _super);
+    function RingOfPower(){ _super.call(this, "r_power", "Anillo de Poder", "Sientes más fuerza.", "items/rings/ringPower"); }
+    return RingOfPower;
+})(EqItem);
+
+var VoidArmor = (function(_super){ __extends(VoidArmor, _super);
+    function VoidArmor(){ _super.call(this, "a_void", "Armadura Vacío", "Protección absoluta.", "items/armors/voidPlate"); }
+    return VoidArmor;
+})(EqItem);
+
+
+// 4. NUEVOS ENEMIGOS (CLASES REALES)
+// =============================================================================
+
+// Helper para crear enemigos básicos
+var createEnemyClass = function(name, id, asciiKey, hp, dmg, width, height) {
+    return (function(_super) {
+        __extends(EnemyClass, _super);
+        function EnemyClass(quest, pos) {
+            _super.call(this, quest, pos, new Naming(name, name), new RenderArea(width, height), new Pos(0, 0), new CollisionBoxCollection(new CollisionBox(this, new Pos(0, 0), new Pos(width, height))), new QuestEntityMovement());
+            this.setMaxHp(hp);
+            this.setHp(hp);
+            this.setDestructible(true);
+            this.getRenderArea().drawString(Database.getAscii(asciiKey), 0, 0);
+            this.addQuestEntityWeapon(new QuestEntityWeapon(this.getQuest(), this, new Naming("Attack", "Attack"), new CollisionBoxCollection(new CollisionBox(this, new Pos(-1, 0), new Pos(width+1, height))), dmg));
+        }
+        return EnemyClass;
+    })(QuestEntity);
+};
+
+var GummyBearEnemy = createEnemyClass("Gummy Bear", "e_gummy", "enemies/gummyBear", 80, 5, 8, 3);
+var LicoriceSnakeEnemy = createEnemyClass("Licorice Snake", "e_snake", "enemies/licoriceSnake", 120, 8, 9, 2);
+var ChocoGolemEnemy = createEnemyClass("Choco Golem", "e_golem", "enemies/chocoGolem", 300, 15, 8, 4);
+
+// JEFE: REY GELATINA
+var JellyKingEnemy = (function(_super) {
+    __extends(JellyKingEnemy, _super);
+    function JellyKingEnemy(quest, pos) {
+        _super.call(this, quest, pos, new Naming("Rey Gelatina", "Rey Gelatina"), new RenderArea(12, 6), new Pos(0, 0), new CollisionBoxCollection(new CollisionBox(this, new Pos(0, 0), new Pos(12, 6))), new QuestEntityMovement());
+        this.setMaxHp(1000);
+        this.setHp(1000);
+        this.getRenderArea().drawString(Database.getAscii("enemies/jellyKing"), 0, 0);
+        this.addQuestEntityWeapon(new QuestEntityWeapon(this.getQuest(), this, new Naming("Royal Slam", "Royal Slam"), new CollisionBoxCollection(new CollisionBox(this, new Pos(-2, 0), new Pos(14, 6))), 20));
+    }
+    return JellyKingEnemy;
+})(QuestEntity);
+
+// JEFE: DRAGÓN DE MENTA
+var MintDragonEnemy = (function(_super) {
+    __extends(MintDragonEnemy, _super);
+    function MintDragonEnemy(quest, pos) {
+        _super.call(this, quest, pos, new Naming("Dragón Menta", "Dragón Menta"), new RenderArea(18, 6), new Pos(0, 0), new CollisionBoxCollection(new CollisionBox(this, new Pos(0, 0), new Pos(18, 6))), new QuestEntityMovement());
+        this.setMaxHp(2500);
+        this.setHp(2500);
+        this.getRenderArea().drawString(Database.getAscii("enemies/mintDragon"), 0, 0);
+        this.addQuestEntityWeapon(new QuestEntityWeapon(this.getQuest(), this, new Naming("Frost Breath", "Frost Breath"), new CollisionBoxCollection(new CollisionBox(this, new Pos(-10, 0), new Pos(28, 6))), 35));
+    }
+    return MintDragonEnemy;
+})(QuestEntity);
+
+// JEFE: DEVORADOR DEL VACÍO
+var VoidEaterEnemy = (function(_super) {
+    __extends(VoidEaterEnemy, _super);
+    function VoidEaterEnemy(quest, pos) {
+        _super.call(this, quest, pos, new Naming("EL DEVORADOR", "EL DEVORADOR"), new RenderArea(15, 6), new Pos(0, 0), new CollisionBoxCollection(new CollisionBox(this, new Pos(0, 0), new Pos(15, 6))), new QuestEntityMovement());
+        this.setMaxHp(10000);
+        this.setHp(10000);
+        this.getRenderArea().drawString(Database.getAscii("enemies/voidEater"), 0, 0);
+        this.addQuestEntityWeapon(new QuestEntityWeapon(this.getQuest(), this, new Naming("Reality Bite", "Reality Bite"), new CollisionBoxCollection(new CollisionBox(this, new Pos(-5, 0), new Pos(20, 6))), 100));
+    }
+    return VoidEaterEnemy;
+})(QuestEntity);
+
+
+// 5. SISTEMA DE MAPAS Y ZONAS (LÓGICA DE VIAJE)
+// =============================================================================
+
+// Clase Base para Mapas de Expansión
+var ExpansionMap = (function(_super) {
+    __extends(ExpansionMap, _super);
+    function ExpansionMap(game, name, asciiKey, color) {
+        _super.call(this, game);
+        this.name = name;
+        this.asciiKey = asciiKey;
+        this.bgColor = color;
+        this.zones = [];
+    }
+    
+    ExpansionMap.prototype.getNaming = function() { return new Naming(this.name, this.name); };
+    
+    ExpansionMap.prototype.update = function() {
+        _super.prototype.update.call(this);
+        this.getGame().setBackgroundColor(this.bgColor);
+        
+        // Dibujar Arte
+        this.getRenderArea().drawString(Database.getAscii(this.asciiKey), 2, 2);
+        
+        // Renderizar botones de las zonas
+        this.getRenderArea().drawString("--- ZONAS DE EXPLORACIÓN ---", 25, 14);
+        
+        for(var i=0; i<this.zones.length; i++) {
+            var zone = this.zones[i];
+            var yPos = 16 + (i*2);
+            this.getRenderArea().addAsciiRealButton(zone.name, 10, yPos, "zoneBtn"+i, zone.desc);
+            (function(map, z, idx){
+                map.getRenderArea().addLinkCall(".zoneBtn"+idx, new CallbackCollection(function(){ map.enterZone(z); }));
+            })(this, zone, i);
+        }
+
+        // Botón volver
+        this.getRenderArea().addAsciiRealButton("VOLVER AL MUNDO", 60, 20, "btnBack", "Regresar al selector");
+        this.getRenderArea().addLinkCall(".btnBack", new CallbackCollection(this.goBack.bind(this)));
+    };
+
+    ExpansionMap.prototype.enterZone = function(zoneConfig) {
+        // CREAR QUEST DINÁMICA
+        var q = new Quest(this.getGame());
+        
+        // Lógica de spawneo simple para la expansión
+        // En un juego real esto sería más complejo, aquí usamos un patrón básico
+        var player = this.getGame().getPlayer();
+        player.loadCandyBoxCharacter(q);
+        player.setGlobalPosition(new Pos(0, 10)); // Posición suelo
+        q.addEntity(player);
+        
+        // Suelo falso (colisión)
+        var ground = new Wall(q, new Pos(0, 11));
+        ground.addBox(new Pos(0, 0), new Pos(100, 10));
+        q.addEntity(ground);
+
+        // Spawnear enemigos según tipo
+        if(zoneConfig.type === "gummy") {
+            q.addEntity(new GummyBearEnemy(q, new Pos(30, 10)));
+            q.addEntity(new GummyBearEnemy(q, new Pos(60, 10)));
+        } else if(zoneConfig.type === "choco") {
+            q.addEntity(new ChocoGolemEnemy(q, new Pos(50, 8)));
+        } else if(zoneConfig.type === "snake") {
+            q.addEntity(new LicoriceSnakeEnemy(q, new Pos(40, 10)));
+        } else if(zoneConfig.type === "boss_jelly") {
+            q.addEntity(new JellyKingEnemy(q, new Pos(50, 6)));
+        } else if(zoneConfig.type === "boss_dragon") {
+            q.addEntity(new MintDragonEnemy(q, new Pos(60, 6)));
+        } else if(zoneConfig.type === "boss_void") {
+            q.addEntity(new VoidEaterEnemy(q, new Pos(60, 6)));
+        }
+
+        // Configurar fin de quest
+        this.getGame().setPlace(q);
+    };
+
+    ExpansionMap.prototype.goBack = function() {
+        this.getGame().setPlace(new WorldTravelMap(this.getGame()));
+    };
+
+    return ExpansionMap;
+})(Place);
+
+// --- DEFINICIÓN DE MAPAS ESPECÍFICOS ---
+
+var JellyKingdomMap = (function(_super){ __extends(JellyKingdomMap, _super);
+    function JellyKingdomMap(g){ 
+        _super.call(this, g, "Reino de Gelatina", "maps/jellyKingdom", new Color(20,40,20)); 
+        this.zones = [
+            {name: "1. Bosque Pegajoso", desc: "Ositos de goma agresivos", type: "gummy"},
+            {name: "2. Río de Mermelada", desc: "Serpientes de regaliz", type: "snake"},
+            {name: "3. Cueva de Ositos", desc: "Más ositos...", type: "gummy"},
+            {name: "4. Templo Blando", desc: "Golems perdidos", type: "choco"},
+            {name: "5. TRONO DEL REY (JEFE)", desc: "Rey Gelatina", type: "boss_jelly"}
+        ];
+    }
+    return JellyKingdomMap;
+})(ExpansionMap);
+
+var MintMountainMap = (function(_super){ __extends(MintMountainMap, _super);
+    function MintMountainMap(g){ 
+        _super.call(this, g, "Montañas de Menta", "maps/mintMountains", new Color(10,30,50)); 
+        this.zones = [
+            {name: "1. Pie de la Montaña", desc: "Golems guardianes", type: "choco"},
+            {name: "2. Acantilado Fresco", desc: "Serpientes de las nieves", type: "snake"},
+            {name: "3. Minas de Azúcar", desc: "Ositos mineros", type: "gummy"},
+            {name: "4. Pico Nevado", desc: "Golems de élite", type: "choco"},
+            {name: "5. NIDO DEL DRAGÓN (JEFE)", desc: "Dragón de Menta", type: "boss_dragon"}
+        ];
+    }
+    return MintMountainMap;
+})(ExpansionMap);
+
+var VoidMap = (function(_super){ __extends(VoidMap, _super);
+    function VoidMap(g){ 
+        _super.call(this, g, "El Vacío", "maps/theVoid", new Color(0,0,0)); 
+        this.zones = [
+            {name: "1. La Nada", desc: "Sombras...", type: "gummy"}, // Placeholder shadows
+            {name: "2. Memorias Rotas", desc: "Ecos del pasado", type: "snake"},
+            {name: "3. Código Corrupto", desc: "Errores fatales", type: "choco"},
+            {name: "4. Horizonte de Eventos", desc: "No hay retorno", type: "choco"},
+            {name: "5. EL DEVORADOR (FINAL)", desc: "Fin del Juego", type: "boss_void"}
+        ];
+    }
+    return VoidMap;
+})(ExpansionMap);
+
+
+// 6. HUB DE VIAJE Y ECONOMÍA
+// =============================================================================
+
+var WorldTravelMap = (function(_super) {
+    __extends(WorldTravelMap, _super);
+    function WorldTravelMap(game) {
+        _super.call(this, game);
+    }
+    
+    WorldTravelMap.prototype.getNaming = function() { return new Naming("Mapa Mundi V3", "el Mapa Mundi"); };
+    
+    WorldTravelMap.prototype.update = function() {
+        _super.prototype.update.call(this);
+        this.getGame().setBackgroundColor(new Color(255, 255, 255));
+        
+        this.getRenderArea().drawString("SELECCIONA TU DESTINO - OPENING THE CANDY BOX 3", 15, 2);
+        
+        // Destinos
+        this.getRenderArea().addAsciiRealButton("REINO DE GELATINA", 10, 6, "btnJelly", "Nivel Recomendado: 10-30");
+        this.getRenderArea().addLinkCall(".btnJelly", new CallbackCollection(function() {
+            this.getGame().setPlace(new JellyKingdomMap(this.getGame()));
+        }.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("MONTAÑAS DE MENTA", 40, 6, "btnMint", "Nivel Recomendado: 30-60");
+        this.getRenderArea().addLinkCall(".btnMint", new CallbackCollection(function() {
+            this.getGame().setPlace(new MintMountainMap(this.getGame()));
+        }.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("EL VACÍO (POST-GAME)", 25, 10, "btnVoid", "PELIGRO EXTREMO");
+        this.getRenderArea().addLinkCall(".btnVoid", new CallbackCollection(function() {
+            this.getGame().setPlace(new VoidMap(this.getGame()));
+        }.bind(this)));
+
+        // Economía: Tienda de Viaje
+        this.getRenderArea().drawString("--- TIENDA DEL VIAJERO ---", 28, 14);
+        this.getRenderArea().addAsciiRealButton("Comprar Katana Dulce", 10, 16, "buyKatana", "50,000 Caramelos");
+        this.getRenderArea().addLinkCall(".buyKatana", new CallbackCollection(function() {
+            if(this.getGame().candies.getCurrent() >= 50000) {
+                this.getGame().candies.add(-50000);
+                this.getGame().addItem(new CandyKatana());
+                alert("¡Katana Adquirida!");
+            }
+        }.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("Comprar Poción Mayor", 45, 16, "buyPotion", "1,000 Caramelos");
+        this.getRenderArea().addLinkCall(".buyPotion", new CallbackCollection(function() {
+            if(this.getGame().candies.getCurrent() >= 1000) {
+                this.getGame().candies.add(-1000);
+                this.getGame().addItem(new HealthPotion()); // Asumiendo clase base
+                alert("Poción comprada.");
+            }
+        }.bind(this)));
+
+        this.getRenderArea().addAsciiRealButton("VOLVER AL PUEBLO", 30, 20, "btnVillage", "Hogar dulce hogar");
+        this.getRenderArea().addLinkCall(".btnVillage", new CallbackCollection(function() {
+            this.getGame().setPlace(new MainMap(this.getGame()));
+        }.bind(this)));
+    };
+    
+    return WorldTravelMap;
+})(Place);
+
+
+// 7. INTEGRACIÓN CON EL JUEGO BASE (HOOKS)
+// =============================================================================
+
+// Sobrescribimos update de MainMap para añadir el botón de acceso
+var _origMainMapUpdate = MainMap.prototype.update;
+
+MainMap.prototype.update = function() {
+    _origMainMapUpdate.call(this);
+    
+    // Si el jugador tiene el mapa original, mostramos el acceso a la expansión
+    // Usamos una comprobación segura (si tiene más de 100 caramelos como ejemplo temprano)
+    if(this.getGame().candies.getCurrent() > 100) {
+        this.getRenderArea().addAsciiRealButton(">>> MUNDO 3.0 (EXPANSIÓN) <<<", 55, 22, "btnExpV3", "Nuevos mapas y enemigos");
+        this.getRenderArea().addLinkCall(".btnExpV3", new CallbackCollection(function() {
+            this.getGame().setPlace(new WorldTravelMap(this.getGame()));
+        }.bind(this)));
+    }
+};
+
+
+// 8. INTERFAZ MÓVIL (INYECCIÓN CSS/JS)
+// =============================================================================
+
+var InjectMobileInterface = function() {
+    console.log("Inyectando controles táctiles V3...");
+    
+    var css = `
+        #mobile-controls { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; background: rgba(0,0,0,0.9); display: flex; z-index: 99999; border-top: 3px solid #d4af37; padding: 5px; box-sizing: border-box; }
+        .mob-btn { flex: 1; margin: 2px; border: 2px solid #555; background: #222; color: #fff; font-family: monospace; font-size: 24px; font-weight: bold; border-radius: 8px; }
+        .mob-btn:active { background: #444; border-color: #fff; transform: translateY(2px); }
+        #m-atk { flex: 2; background: #5a1a1a; border-color: #ff5555; font-size: 28px; }
+    `;
+    jQuery("head").append("<style>" + css + "</style>");
+    
+    var html = `
+        <div id="mobile-controls">
+            <button class="mob-btn" id="m-left">⬅</button>
+            <button class="mob-btn" id="m-atk">⚔ ATACAR</button>
+            <button class="mob-btn" id="m-right">➡</button>
+        </div>
+    `;
+    jQuery("body").append(html);
+    
+    // Simular eventos de teclado para mover al personaje
+    function triggerKey(code) {
+        var e = jQuery.Event("keydown"); e.which = code; e.keyCode = code; jQuery(document).trigger(e);
+    }
+    
+    jQuery("#m-left").on("touchstart mousedown", function(e) { e.preventDefault(); triggerKey(37); }); // Left
+    jQuery("#m-right").on("touchstart mousedown", function(e) { e.preventDefault(); triggerKey(39); }); // Right
+    jQuery("#m-atk").on("touchstart mousedown", function(e) { e.preventDefault(); triggerKey(32); }); // Space
+};
+
+console.log("EXPANSIÓN ULTIMATE V3 CARGADA CORRECTAMENTE.");
