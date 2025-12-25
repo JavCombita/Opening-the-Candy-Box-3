@@ -1,3 +1,20 @@
+| . | . | . | . | . | . | . |
+||||||||||
+| . | . | . | . | . | . | . |
+||||||||
+CANDY BOX 3 CREDITS
+Original Game Logic & Concept:
+aniwey (candybox2.net)
+Previous Modifications:
+SuperJedi224
+OPENING THE CANDYBOX 3 CREATORS
+Lead Developer & Editor:
+JavCombita
+New Content & Design:
+JavCombita
+Special Thanks:
+The Open Source Community
+
 All the following ascii art is under the Creative Commons Attribution-Share Alike License and should be credited to the listed person(s). Any ascii art not on this list is unlicensed.
 
 Credits are for the version of the image appearing in this fork. If this list is incomplete, please let me know.
