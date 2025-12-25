@@ -14,6 +14,7 @@ body, #centeredContent{
 .asciiRealButton{
     border-color: rgb(185, 179, 171);
     background-color: rgb(35, 37, 42);
+    color: white; /* EXPANSION FIX: Ensure text is visible */
 }
 
 .asciiRealButton:hover{
@@ -25,6 +26,7 @@ body, #centeredContent{
 .tooltip{
     background-color: rgb(0, 0, 0);
     border-color: rgb(255, 255, 255);
+    color: white;
 }
 
 /* Comments */
@@ -37,4 +39,27 @@ body, #centeredContent{
 
 .keepBlackTextWhenInverted{
     color: rgb(0, 0, 0);
+}
+
+/* =========================================
+   EXPANSION: MOBILE DARK MODE STYLES
+   ========================================= */
+
+#mobile-controls {
+    background-color: #1a1a1a;
+    border-top: 2px solid #555;
+}
+
+.mob-btn {
+    background: #000;
+    border: 2px solid #888;
+    color: #fff;
+}
+
+.mob-btn:active {
+    background: #333;
+}
+
+#m-atk {
+    background-color: #330000; /* Dark red for attack */
 }
